@@ -1,7 +1,7 @@
 from __init__ import app, api_key, api_sec_key,db
 from flask import render_template,flash, redirect,url_for, session, request,  send_file
 from flask_login import current_user, login_user, login_required, logout_user
-from __init__ import User, User_settings
+from __init__ import User, User_settings, tweet
 from werkzeug.utils import secure_filename
 import os
 import threading
@@ -298,6 +298,42 @@ def post_add():
 	logging.info("Tweet post created will tweet in "+str(request.form.get('time_diff'))+" seconds.")
 
 	return redirect(url_for('index'))
+
+	""" my code """
+@app.route('/hastag', methods=['GET', 'POST'])
+def hastag():
+	if request.method == 'GET':
+		return render_template('form_hastag.html')
+	if request.method == 'POST':
+		CONSUMER_KEY = "Rg7g7mmyae2yZfG6Ch6g91dAN"
+		CONSUMER_SECRET = "PcQzF7Df7c8Q8wZtVCX3l5xJOA21qqgT9dqTSBUJ50MYsoMmBj"
+#Bearer_token = "AAAAAAAAAAAAAAAAAAAAABjfFwEAAAAAZxzAtRTUbK9g1K6a%2BWFTU2kdcxA%3DlYZhCtrFdPICkaodXE0wovYnH0mOgJT60xe135c8eLvF5glTCn"
+		Access_Token = "1282557457445859329-tKUyAmEJW0E7WaTaCafmw2QKKYcY7i"
+		Access_Token_secret = "KYYtG2qnqzthY6GQfr2sJwqGfre24Rs8HxrFVlauzUYJv"
+
+		auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
+		auth.set_access_token(Access_Token, Access_Token_secret)
+	#auth.set_access_token(user.acc_token,user.acc_secret)
+		api = tweepy.API(auth)
+	
+		tweets = tweepy.Cursor(api.search,
+			q=request.form['fname'],
+			lang="en").items(5)
+		for t2 in tweets:
+			t1 = tweet(tweets_text = t2.text,author_screenname= t2.author.screen_name, author_id = t2.author.id, tweets_id = t2.id)
+		#tweets_id.tweet.id
+			print(t2.text)
+			db.session.add(t1)
+		try:
+			fetch_author_id = tweet.query.all()
+			for t3 in fetch_author_id:
+				api.create_friendship(t3.author_id)
+		except exc.SQLAlchemyError as e:
+			print(type(e))
+	db.session.commit()
+	return render_template('form_hastag.html')
+	
+
 
 @app.route('/bot_logs',methods=['GET','POST'])
 @app.route('/bot_logs/<command>')

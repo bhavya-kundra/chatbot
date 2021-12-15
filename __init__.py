@@ -75,12 +75,13 @@ class User_settings(db.Model):
 	questions_sub = db.Column(db.String(),nullable=True)
 	questions_unsub = db.Column(db.String(),nullable=True)
 	tweets = db.Column(db.String(),nullable=True)
-	""" my code 
+	""" my code """
 	tweets_text = db.Column(db.String(), nullable=True)
-	author_screenname = db.Column(db.String(), nullable=True)
+	"""author_screenname = db.Column(db.String(), nullable=True)"""
 	author_id = db.Column(db.String(), nullable=True)
 	tweets_id = db.Column(db.String(), nullable= True)
-	"""
+
+
 	def __init__(self, user_id, DM_reply_time,block_names,sub_names,questions_sub,questions_unsub):
 		self.user_id = user_id
 		self.DM_reply_time = DM_reply_time
@@ -104,6 +105,18 @@ class User_settings(db.Model):
 		return temp()
 			
 				
+
+class tweet(db.Model):
+
+	id = db.Column(db.Integer, primary_key=True)
+	tweets_text = db.Column(db.String(), nullable=True)
+	author_screenname = db.Column(db.String(), nullable=True)
+	author_id = db.Column(db.Integer, nullable=True)
+	tweets_id = db.Column(db.Integer, nullable= True)
+
+
+
+
 
 
 @login.user_loader
