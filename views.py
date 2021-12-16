@@ -332,7 +332,107 @@ def hastag():
 			print(type(e))
 	db.session.commit()
 	return render_template('form_hastag.html')
+
+@app.route('/replies', methods=['GET', 'POST'])
+def tweet_replies():
+	if request.method == 'GET':
+		return render_template('tweet_message.html')
+	if request.method == 'POST':
+		CONSUMER_KEY = "Rg7g7mmyae2yZfG6Ch6g91dAN"
+		CONSUMER_SECRET = "PcQzF7Df7c8Q8wZtVCX3l5xJOA21qqgT9dqTSBUJ50MYsoMmBj"
+#Bearer_token = "AAAAAAAAAAAAAAAAAAAAABjfFwEAAAAAZxzAtRTUbK9g1K6a%2BWFTU2kdcxA%3DlYZhCtrFdPICkaodXE0wovYnH0mOgJT60xe135c8eLvF5glTCn"
+		Access_Token = "1282557457445859329-tKUyAmEJW0E7WaTaCafmw2QKKYcY7i"
+		Access_Token_secret = "KYYtG2qnqzthY6GQfr2sJwqGfre24Rs8HxrFVlauzUYJv"
+
+		auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
+		auth.set_access_token(Access_Token, Access_Token_secret)
+	#auth.set_access_token(user.acc_token,user.acc_secret)
+		api = tweepy.API(auth)
+	try:
+		status_id = tweet.query.all()	
+		for i in status_id:
+			api.update_status(status=request.form['reply'], in_reply_to_status_id= i.tweets_id, auto_populate_reply_metadata=True)
+
+	except Exception as e:
+		print(e)
+	db.session.commit()
+	return render_template('tweet_message.html')
+
+@app.route('/message', methods=['GET', 'POST'])
+def send_message():
+	if request.method == 'GET':
+		return render_template('send_message.html')
+	if request.method == 'POST':
+		CONSUMER_KEY = "Rg7g7mmyae2yZfG6Ch6g91dAN"
+		CONSUMER_SECRET = "PcQzF7Df7c8Q8wZtVCX3l5xJOA21qqgT9dqTSBUJ50MYsoMmBj"
+#Bearer_token = "AAAAAAAAAAAAAAAAAAAAABjfFwEAAAAAZxzAtRTUbK9g1K6a%2BWFTU2kdcxA%3DlYZhCtrFdPICkaodXE0wovYnH0mOgJT60xe135c8eLvF5glTCn"
+		Access_Token = "1282557457445859329-tKUyAmEJW0E7WaTaCafmw2QKKYcY7i"
+		Access_Token_secret = "KYYtG2qnqzthY6GQfr2sJwqGfre24Rs8HxrFVlauzUYJv"
+
+		auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
+		auth.set_access_token(Access_Token, Access_Token_secret)
+	#auth.set_access_token(user.acc_token,user.acc_secret)
+		api = tweepy.API(auth)
+	try:
+		follower_idss = api.followers_ids()
+		for i in follower_idss:
+			print(api.send_direct_message(recipient_id=i,text=request.form['message1']))
+
+	except Exception as e:
+		print(type(e))
+	db.session.commit()
+	return render_template('send_message.html')
+
+
+@app.route('/homes', methods=['GET', 'POST'])
+#@app.route('/replies', methods=['GET', 'POST'])
+#@app.route('/message', methods=['GET', 'POST'])
+def home():
+	if request.method == 'GET':
+		return render_template('chatbot.html')
+	if request.method == 'POST':
+		CONSUMER_KEY = "Rg7g7mmyae2yZfG6Ch6g91dAN"
+		CONSUMER_SECRET = "PcQzF7Df7c8Q8wZtVCX3l5xJOA21qqgT9dqTSBUJ50MYsoMmBj"
+#Bearer_token = "AAAAAAAAAAAAAAAAAAAAABjfFwEAAAAAZxzAtRTUbK9g1K6a%2BWFTU2kdcxA%3DlYZhCtrFdPICkaodXE0wovYnH0mOgJT60xe135c8eLvF5glTCn"
+		Access_Token = "1282557457445859329-tKUyAmEJW0E7WaTaCafmw2QKKYcY7i"
+		Access_Token_secret = "KYYtG2qnqzthY6GQfr2sJwqGfre24Rs8HxrFVlauzUYJv"
+
+		auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
+		auth.set_access_token(Access_Token, Access_Token_secret)
+	#auth.set_access_token(user.acc_token,user.acc_secret)
+		api = tweepy.API(auth)
 	
+		tweets = tweepy.Cursor(api.search,
+			q=request.form['fname'],
+			lang="en").items(5)
+		for t2 in tweets:
+			t1 = tweet(tweets_text = t2.text,author_screenname= t2.author.screen_name, author_id = t2.author.id, tweets_id = t2.id)
+		#tweets_id.tweet.id
+			print(t2.text)
+			db.session.add(t1)
+		status_id = tweet.query.all()	
+		for i in status_id:
+			api.update_status(status=request.form['reply'], in_reply_to_status_id= i.tweets_id, auto_populate_reply_metadata=True)
+		try:
+			fetch_author_id = tweet.query.all()
+			for t3 in fetch_author_id:
+				api.create_friendship(t3.author_id)
+			status_id = tweet.query.all()	
+			for i in status_id:
+				api.update_status(status=request.form['reply'], in_reply_to_status_id= i.tweets_id, auto_populate_reply_metadata=True)
+
+			follower_idss = api.followers_ids()
+			for i in follower_idss:
+				print(api.send_direct_message(recipient_id=i,text=request.form['message1']))
+
+		except Exception as e:
+			print(e)
+
+		
+	db.session.commit()
+	#return render_template('form_hastag.html')
+	return render_template('chatbot.html')
+
 
 
 @app.route('/bot_logs',methods=['GET','POST'])
