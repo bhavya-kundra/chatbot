@@ -1,0 +1,449 @@
+{% extends "base.html" %}
+
+{% block scripts %}
+<script type="text/javascript">
+
+	
+	
+	
+	var tot_sub_rows = -1;
+	var tot_unsub_rows = -1;
+	function myFunction(imgs) {
+	  // Get the expanded image
+	  var expandImg = document.getElementById("expandedImg");
+	  var tab = document.getElementById("tab");
+	  // Get the image text
+	  var imgText = document.getElementById("imgtext");
+	  var blurrify_div = document.getElementById('blurrify_func');
+	  
+	  // Use the same src in the expanded image as the image being clicked on from the grid
+	  expandImg.src = imgs.src;
+	  // Use the value of the alt attribute of the clickable image as text inside the expanded image
+	  imgText.innerHTML = imgs.alt;
+	  // Show the container element (hidden with CSS)
+	  expandImg.parentElement.style.display = 'block'
+	  expandImg.style.display = "block";
+	  tab.style.display = "block";
+	  if(imgs.src.includes('_premium')){
+	  	blurrify_div.style.display = 'none'
+	  }
+	  else{
+	  	blurrify_div.style.display = 'block'	
+	  }
+
+	}	
+
+
+
+	function myFunction2(vids) {
+	  // Get the expanded image
+	  var expandvid = document.getElementById("expandedVid");
+	  var tab = document.getElementById("tab_vid");
+	  // Get the image text
+	  var vidText = document.getElementById("vidtext");
+	  var blurrify_div = document.getElementById('blurrify_func_vid');
+	  // Use the same src in the expanded image as the image being clicked on from the grid
+	  expandvid.src = vids;
+	  // Use the value of the alt attribute of the clickable image as text inside the expanded image
+	  vidText.innerHTML = vids.split('/')[vids.split('/').length-1];
+	  // Show the container element (hidden with CSS)
+	  expandvid.parentElement.style.display = 'block'
+	  expandvid.style.display = "block";
+	  tab.style.display = "block";
+	  if(vids.includes('_premium')){
+	  	blurrify_div.style.display = 'none'
+	  }
+	  else{
+	  	blurrify_div.style.display = 'block'	
+	  }
+
+	}	
+
+
+	function delete_img(imgs){
+	  	var tab = document.getElementById("tab");
+		var img = document.getElementById("expandedImg");
+		var img_src =  img.src;
+		var ask = window.confirm("Are you sure you want to delete this Image?");
+		if (ask){
+			img.parentElement.style.display = "None";
+			tab.style.display = "None";
+			img.style.display = 'None';
+			window.location = img_src+'/delete';	
+		}
+
+		
+	}
+
+	function blurrify(imgs){
+	  	var tab = document.getElementById("tab");
+		var img = document.getElementById("expandedImg");
+		var img_src =  img.src;
+		var ask = window.confirm("Are you sure you want to make this image Premium?");
+		if (ask){
+			img.parentElement.style.display = "None";
+			tab.style.display = "None";
+			img.style.display = 'None';
+			window.location = img_src+'/blurrify';	
+		}
+
+		
+	}
+
+
+
+	function delete_vid(imgs){
+	  	var tab = document.getElementById("tab_vid");
+		var vid = document.getElementById("expandedVid");
+		var vid_src =  vid.src;
+		var ask = window.confirm("Are you sure you want to delete this Video?");
+		if (ask){
+			vid.parentElement.style.display = "None";
+			tab.style.display = "None";
+			vid.style.display = 'None';
+			window.location = vid_src+'/delete';	
+		}
+
+		
+	}
+
+	function blurrify_vid(vids){
+	  	var tab = document.getElementById("tab_vid");
+		var vid = document.getElementById("expandedVid");
+		var vid_src =  vid.src;
+		var ask = window.confirm("Are you sure you want to make this Video Premium?");
+		if (ask){
+			vid.parentElement.style.display = "None";
+			tab.style.display = "None";
+			vid.style.display = 'None';
+			window.location = vid_src+'/blurrify';	
+		}
+
+		
+	}
+
+
+	function create_row(id_str) {
+		var table = document.getElementById(id_str);
+		if( id_str == "qna_sub"){
+			window.tot_sub_rows += 1		
+			var row = table.insertRow(window.tot_sub_rows);
+			var cell1 = row.insertCell(0);
+		  var cell2 = row.insertCell(1);
+		  cell1.innerHTML = "<input type='text' id='"+id_str+"_q"+window.tot_sub_rows+"' placeholder='Enter User query' style='width:100%;'>";
+		  cell2.innerHTML = "<input type='text' id='"+id_str+"_a"+window.tot_sub_rows+"' placeholder='Enter bots reply' style='width:100%;'>";
+		} else{
+			window.tot_unsub_rows += 1
+			var row = table.insertRow(window.tot_unsub_rows);
+			var cell1 = row.insertCell(0);
+		  var cell2 = row.insertCell(1);
+		  cell1.innerHTML = "<input type='text' id='"+id_str+"_q"+window.tot_unsub_rows+"' placeholder='Enter User query' style='width:100%;'>";
+		  cell2.innerHTML = "<input type='text' id='"+id_str+"_a"+window.tot_unsub_rows+"' placeholder='Enter bots reply' style='width:100%;'>";
+		}
+	  
+	}
+	
+
+	function delete_row(id_str) {
+	  
+	  if( id_str == "qna_sub"){
+	  		document.getElementById(id_str).deleteRow(window.tot_sub_rows);
+			window.tot_sub_rows -= 1		
+		} else{
+			document.getElementById(id_str).deleteRow(window.tot_unsub_rows);
+			window.tot_unsub_rows -= 1
+		}
+	}
+	
+
+	function compile_frm(){
+		var que_ans_sub = {};
+		var que_ans_unsub = {};
+		
+ 		for (var i = 0; i <= window.tot_sub_rows; i++) {
+			que_ans_sub[document.getElementById('qna_sub_q'+i).value] = document.getElementById('qna_sub_a'+i).value
+		}
+		for (var i = 0; i <= window.tot_unsub_rows; i++) {
+			que_ans_unsub[document.getElementById('qna_unsub_q'+i).value] = document.getElementById('qna_unsub_a'+i).value
+		}
+		
+		document.getElementById("{{form.questions_sub.id}}").value = JSON.stringify(que_ans_sub);
+		document.getElementById("{{form.questions_unsub.id}}").value = JSON.stringify(que_ans_unsub);
+		
+		
+	}
+
+
+
+</script>
+
+{% endblock %}
+
+
+{% block content %}
+<div class="container-fluid ">
+<div style="float: left; width: 100%;" class="container-fluid ">
+<form action="" method="post" novalidate enctype="multipart/form-data" onsubmit="compile_frm();">
+<div class="py-2" style="float: left; width: 100%;">
+    <p class="h2" style="font-size: 30px;">Customize Bot</p>
+    	
+        {{ form.hidden_tag() }}
+        <table cellspacing="10" cellpadding="20">
+        	<tr>
+        		<td>
+        			{{ form.DM_reply_time.label }}
+		            <small>(in minutes)</small>
+		            {{ form.DM_reply_time() }}
+		        </td>
+        	</tr>
+        	<tr>
+        		<td style="text-align: left;">
+        			{{ form.block_names.label }}<br>
+		            <small>(Enter names seperated by space)</small><br>
+		            
+        		</td>
+        		<td style="text-align: left;">
+        			{{ form.block_names() }}		
+        		</td>
+        	</tr>
+        	<tr>
+        		<td style="text-align: left;">
+        			{{ form.sub_names.label }}<br>
+		            <small>(Enter names seperated by space)</small><br>
+		            
+        		</td>
+        		<td style="text-align: left;">
+        			{{ form.sub_names() }}		
+        		</td>
+        	</tr>
+        	<tr>
+        		<td  style="text-align: left;">
+        			{{ form.files.label }}
+        		</td>
+        		<td style="text-align: left;">
+					{{ form.files() }}        			
+        		</td>
+        	</tr>
+        </table>
+        <p style="display: none;" >
+        	{{ form.questions_sub() }}
+        </p>
+        <p style="display: none;" >
+        	{{ form.questions_unsub() }}
+        </p>
+    
+
+    </div>
+    
+    <div style="float: left; height: 100%; width: 100%;" class="py-2">
+    	<fieldset>
+    	<p class="h2" style="font-size: 30px;">Replies for Subscribed users</p> 
+	    	<table id="qna_sub" style="width: 100%;" cellpadding="10px">
+			</table>
+			
+			<div style="height: 25px;" class="text-center">
+			<img onclick="delete_row('qna_sub')" src="{{ url_for('static',filename='minus.png') }}" class="img" style="float: right;height: 25px; width: 25px">
+			<img onclick="create_row('qna_sub')" src="{{ url_for('static',filename='plus.png') }}" class="img" style="float: right;height: 25px; width: 25px;">
+
+			
+			</div>
+			
+			
+		</fieldset>
+    </div>
+    <div style="float: left; height: 100%; width: 100%;" class="py-2">
+    	<fieldset>
+    	<p class="h2" style="font-size: 30px;">Replies for Unsubscribed users</p> 
+	    	<table id="qna_unsub" style="width: 100%;" cellpadding="10px">
+			</table>
+			
+			<div style="height: 25px;" class="text-center">
+			<img onclick="delete_row('qna_unsub')" src="{{ url_for('static',filename='minus.png') }}" class="img" style="float: right;height: 25px; width: 25px">
+			<img onclick="create_row('qna_unsub')" src="{{ url_for('static',filename='plus.png') }}" class="img" style="float: right;height: 25px; width: 25px;">
+
+			
+			</div>
+			
+			
+		</fieldset>
+    </div>
+    <div style="float: right; margin-top: 50px; margin-bottom: 50px;">
+    <button type="Submit" class="btn btn-primary" >Save Settings</button>
+    </div>
+    </form>
+</div>
+     <div style="float: left; width: 100%;">
+    	<h1 align="center">Uploaded Images</h1>
+    	<br>
+    	<div class='card'>
+    		<div class="row">
+    		{% if img_files %}
+    			{% for file in img_files %}
+    				<div class="column">
+					    <img src="{{file}}" alt="{{file.split('/')[-1]}}" onclick="myFunction(this);">
+					</div>
+    			{% endfor %}
+    		{% endif %}
+    		</div>
+
+
+		<!-- The expanding image container -->
+		<div class="container">
+		  <!-- Close the image -->
+		  
+		  <div style="background-color: black; text-align: right;" class="dispclass" id="tab">
+		  <div id="imgtext" style="text-align: left; padding: 8px; font-size: 15px;"></div>
+		  
+		  </div>
+		  <!-- Expanded image -->
+		  
+		  	<img id="expandedImg" style="width:100%;height: 100%" class="dispclass mb-5">
+		  
+		  
+
+		  <button style="float: left;"  type="button" class="btn btn-secondary" onclick="document.getElementById('expandedImg').style.display='none'; this.parentElement.style.display='none';"> 
+	        Close
+	      </button>
+	      <button style="float: left;" type="button" class="btn btn-danger" onclick="delete_img(this);"> 
+	        Delete
+	      </button>
+	      <div id='blurrify_func' style="float: left; display: none;">
+	      <div style="float: left;" class="ml-5" >
+	      <input type="checkbox" name="make_premium" class="form-check-input" id='make_premium' onclick="toggle_blurrify();">
+	      <label for="make_premium" class="form-check-label">Make Premium</label>
+	      
+	      
+	      </div>
+		  <button id='blurrify_save' type="button" class="btn btn-primary ml-5" style=" display: none; float: left;" onclick="blurrify();">
+		  	Save
+		  </button>
+		  </div>
+		
+		</div>
+
+		</div>
+</div>
+
+
+
+
+<div style="float: left; width: 100%;">
+    	<h1 align="center">Uploaded Videos</h1>
+    	<br>
+    	<div class='card'>
+    		<div class="row">
+    		{% if vid_files %}
+    			{% for file in vid_files %}
+    				<div class="column">
+    					<div style="float: left;"><font>{{file.split('/')[-1]}}</font></div>
+					    <div style="float: left;"><video src="{{file}}" alt="{{file.split('/')[-1]}}" onclick="myFunction2(this.src);"/></div>
+					</div>
+    			{% endfor %}
+    		{% endif %}
+    		</div>
+    		<div class="container">
+			  <!-- Close the image -->
+			  
+			  <div style="background-color: black; text-align: right;" class="dispclass" id="tab_vid">
+			  <div id="vidtext" style="text-align: left;float: left; padding: 8px; font-size: 15px;"></div>
+			  
+			  
+			  </div>
+			  <!-- Expanded image -->
+			  <video id="expandedVid" style="width:100%;height: 100%" controls class="dispclass mb-5" type='video/mp4'></video>	
+
+			  <button style="float: left;"  type="button" class="btn btn-secondary" onclick="document.getElementById('expandedVid').style.display='none'; this.parentElement.style.display='none';"> 
+		        Close
+		      </button>
+		      <button style="float: left;" type="button" class="btn btn-danger" onclick="delete_vid(this);"> 
+		        Delete
+		      </button>
+			  
+			  <div id='blurrify_func_vid' style="float: left; display: none;">
+		      <div style="float: left;" class="ml-5" >
+		      <input type="checkbox" name="make_premium" class="form-check-input" id='make_premium_vid' onclick="toggle_blurrify_vid();">
+		      <label for="make_premium" class="form-check-label">Make Premium</label>
+		      
+		      
+		      </div>
+			  <button id='blurrify_save_vid' type="button" class="btn btn-primary ml-5" style=" display: none; float: left;" onclick="blurrify_vid();">
+			  	Save
+			  </button>
+			  </div>
+			  
+			
+			</div>
+
+		</div>
+
+		
+</div>
+
+
+
+
+</div>
+<script type="text/javascript">
+
+		function toggle_blurrify(){
+			inputs = document.getElementById('make_premium');
+			if(inputs.checked == false) {
+		        document.getElementById('blurrify_save').style.display='none';
+		    }
+		    else{
+		        document.getElementById('blurrify_save').style.display='block';
+		            
+		    }
+		}
+
+		function toggle_blurrify_vid(){
+			inputs = document.getElementById('make_premium_vid');
+			if(inputs.checked == false) {
+		        document.getElementById('blurrify_save_vid').style.display='none';
+		    }
+		    else{
+		        document.getElementById('blurrify_save_vid').style.display='block';
+		            
+		    }
+		}
+
+    	var qna_sub_field = document.getElementById('{{form.questions_sub.id}}');
+    	var qna_unsub_field = document.getElementById('{{form.questions_unsub.id}}');
+
+
+    	
+		var table_sub_widget = document.getElementById('qna_sub');
+		var table_unsub_widget = document.getElementById('qna_unsub');
+		
+		if (qna_sub_field.value != ""){
+			qna_obj = JSON.parse(qna_sub_field.value)
+			for(const key in qna_obj){
+				window.tot_sub_rows += 1
+				var row = table_sub_widget.insertRow(window.tot_sub_rows);
+		  		var cell1 = row.insertCell(0);
+		  		var cell2 = row.insertCell(1);
+		  		cell1.innerHTML = "<input type='text' id='qna_sub_q"+window.tot_sub_rows+"' value='"+key+"' style='width:100%;'>";
+		  		cell2.innerHTML = "<input type='text' id='qna_sub_a"+window.tot_sub_rows+"' value='"+qna_obj[key]+"' style='width:100%;'>";
+				
+		  		
+			}
+			
+		}
+		if (qna_unsub_field.value != ""){
+			qna_obj = JSON.parse(qna_unsub_field.value)
+			for(const key in qna_obj){
+				window.tot_unsub_rows += 1
+				var row = table_unsub_widget.insertRow(window.tot_unsub_rows);
+		  		var cell1 = row.insertCell(0);
+		  		var cell2 = row.insertCell(1);
+		  		cell1.innerHTML = "<input type='text' id='qna_unsub_q"+window.tot_unsub_rows+"' value='"+key+"' style='width:100%;'>";
+		  		cell2.innerHTML = "<input type='text' id='qna_unsub_a"+window.tot_unsub_rows+"' value='"+qna_obj[key]+"' style='width:100%;'>";
+				
+		  		
+			}
+			
+		}
+		
+
+    </script>
+{% endblock %}
