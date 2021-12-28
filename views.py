@@ -500,7 +500,7 @@ def bolck_usr(usr_id=None):
 	db.session.commit()
 	return redirect(url_for('index'))
 
-
+#
 
 
 
