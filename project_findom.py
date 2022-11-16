@@ -11,16 +11,16 @@ import tweepy
 
 tweepy.__version__
 
-!pip install schedule
+# pip install schedule
 
 import schedule
 import time
 
-CONSUMER_KEY = "eQiWlZXQC9Vk7LCM3LyZ7iSQE"
-CONSUMER_SECRET = "10iqrwnwYxmQDMldvrzGiEe0Bg9B4mqoBawRKkpyzgZpz6sitU"
+CONSUMER_KEY = ""
+CONSUMER_SECRET = ""
 #Bearer_token = "AAAAAAAAAAAAAAAAAAAAABjfFwEAAAAAZxzAtRTUbK9g1K6a%2BWFTU2kdcxA%3DlYZhCtrFdPICkaodXE0wovYnH0mOgJT60xe135c8eLvF5glTCn"
-Access_Token = "1282557457445859329-bY7n1fb7FS4t6Th5s3dh9r33LfZ76C"
-Access_Token_secret = "FWe8Cnvq0zgqmqQB9N2KRc7qiO0A6NNTr0W8O1TRlV5iT"
+Access_Token = ""
+Access_Token_secret = ""
 
 auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
 auth.set_access_token(Access_Token, Access_Token_secret)
@@ -233,7 +233,7 @@ def chatty():
 if __name__ == "__main__":
     chatty()
 
-!pip install chatterbot
+# !pip install chatterbot
 
 from chatterbot import ChatBot
 from chatterbot.trainers import ListTrainer

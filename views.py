@@ -40,28 +40,28 @@ def login():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    if current_user.is_authenticated:
-        return redirect(url_for('customize_bot'))
-    form = RegistrationForm()
-    auth = tweepy.OAuthHandler(api_key,api_sec_key)
-    if form.validate_on_submit():
-    	session['username'] = form.username.data
-    	session['password'] = form.password.data
-    	flash("redirecting to Twitter")
-    	return redirect(auth.get_authorization_url())
-    	
-    oauth_t = request.args.get('oauth_token')
-    oauth_v = request.args.get('oauth_verifier')
-    if oauth_t:
-    	auth.request_token = { 'oauth_token' : oauth_t,'oauth_token_secret' : oauth_v }
-    	auth.get_access_token(oauth_v)
-    	user = User(username=session['username'],acc_token= auth.access_token,acc_secret=auth.access_token_secret)
-    	user.set_password(session['password'])
-    	db.session.add(user)
-    	db.session.commit()
-    	flash('Congratulations, you are now a registered user!')
-    	return redirect(url_for('login'))
-    return render_template('register.html', title='Register', form=form)
+	if current_user.is_authenticated:
+		return redirect(url_for('customize_bot'))
+	form = RegistrationForm()
+	auth = tweepy.OAuthHandler(api_key,api_sec_key)
+	if form.validate_on_submit():
+		session['username'] = form.username.data
+		session['password'] = form.password.data
+		flash("redirecting to Twitter")
+		return redirect(auth.get_authorization_url())
+		
+	oauth_t = request.args.get('oauth_token')
+	oauth_v = request.args.get('oauth_verifier')
+	if oauth_t:
+		auth.request_token = { 'oauth_token' : oauth_t,'oauth_token_secret' : oauth_v }
+		auth.get_access_token(oauth_v)
+		user = User(username=session['username'],acc_token= auth.access_token,acc_secret=auth.access_token_secret)
+		user.set_password(session['password'])
+		db.session.add(user)
+		db.session.commit()
+		flash('Congratulations, you are now a registered user!')
+		return redirect(url_for('login'))
+	return render_template('register.html', title='Register', form=form)
 
 @app.route('/customize_bot',methods=['POST','GET'])
 @login_required

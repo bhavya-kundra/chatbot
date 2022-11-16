@@ -7,19 +7,19 @@ Original file is located at
     https://colab.research.google.com/drive/1ALc8WwCS5fDYCoxmcfQ6_G1hk-nB0cPG
 """
 
-pip install git+https://github.com/tweepy/tweepy.git
+# pip install git+https://github.com/tweepy/tweepy.git
 
-!pip install tweepy
+# !pip install tweepy
 
 import tweepy
 
 tweepy.__version__
 
-CONSUMER_KEY = "Rg7g7mmyae2yZfG6Ch6g91dAN"
-CONSUMER_SECRET = "PcQzF7Df7c8Q8wZtVCX3l5xJOA21qqgT9dqTSBUJ50MYsoMmBj"
-#Bearer_token = "AAAAAAAAAAAAAAAAAAAAABjfFwEAAAAAZxzAtRTUbK9g1K6a%2BWFTU2kdcxA%3DlYZhCtrFdPICkaodXE0wovYnH0mOgJT60xe135c8eLvF5glTCn"
-Access_Token = "1282557457445859329-tKUyAmEJW0E7WaTaCafmw2QKKYcY7i"
-Access_Token_secret = "KYYtG2qnqzthY6GQfr2sJwqGfre24Rs8HxrFVlauzUYJv"
+CONSUMER_KEY = ""
+CONSUMER_SECRET = ""
+Bearer_token = ""
+Access_Token = ""
+Access_Token_secret = ""
 
 auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
 auth.set_access_token(Access_Token, Access_Token_secret)
@@ -76,7 +76,6 @@ tweets = tweepy.Cursor(api.search,
 tweets
 #len(tweets)
 
-bc
 
 api.send_direct_message(1166721132717756418, 'Hi')
 
@@ -86,10 +85,6 @@ for i in id:
   print(message)
 
 api.send_direct_message()
-
-id
-
-author_s
 
 u = api.get_user(493768969)
 print(u.screen_name)
@@ -124,7 +119,7 @@ abc[1].text
 
 abc[1].__dict__
 
-!pip install searchtweets
+# !pip install searchtweets
 
 
 
@@ -145,8 +140,6 @@ for i in tweets:
 
 lol = [tweets]
 lol
-
-lol1
 
 tweets
 
